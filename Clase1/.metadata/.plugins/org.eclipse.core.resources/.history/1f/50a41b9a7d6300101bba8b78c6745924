@@ -1,0 +1,68 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.modelo.*;
+import com.ejemplo.banco.modelo.enums.TipoCuenta;
+import com.ejemplo.banco.modelo.enums.TipoMovimiento;
+import com.ejemplo.banco.service.MovimientoService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class BancoMain {
+    public static void main(String[] args) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("BancoPU");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            // 1. Crear un cliente
+            Cliente cliente = new Cliente();
+            cliente.setNombre("Juan Pérez");
+            cliente.setDni("12345678");
+            cliente.setEmail("juan.perez@example.com");
+            cliente.setTelefono("987654321");
+            cliente.setFechaNacimiento(LocalDate.of(1990, 5, 20));
+            em.persist(cliente);
+
+            // 2. Crear una cuenta para el cliente
+            Cuenta cuenta = new Cuenta();
+            cuenta.setNumeroCuenta("C001");
+            cuenta.setSaldo(BigDecimal.valueOf(1000.00));
+            cuenta.setTipoCuenta(TipoCuenta.AHORROS);
+            cuenta.setCliente(cliente);
+            em.persist(cuenta);
+
+            // 3. Registrar un depósito (movimiento)
+            Movimiento movimiento = new Movimiento();
+            movimiento.setCuenta(cuenta);
+            movimiento.setTipoMovimiento(TipoMovimiento.DEPOSITO);
+            movimiento.setMonto(BigDecimal.valueOf(250.00));
+            movimiento.setFechaMovimiento(LocalDateTime.now());
+            movimiento.setDescripcion("Depósito en ventanilla");
+            movimiento.setNumeroTransaccion(UUID.randomUUID().toString());
+
+            // Actualizar saldo
+            cuenta.setSaldo(cuenta.getSaldo().add(movimiento.getMonto()));
+
+            // Persistir el movimiento
+            em.persist(movimiento);
+            em.merge(cuenta);
+
+            em.getTransaction().commit();
+
+            System.out.println("✅ Cliente, cuenta y movimiento registrados correctamente.");
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+            emf.close();
+        }
+    }
+}

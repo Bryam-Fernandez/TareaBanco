@@ -1,0 +1,30 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.modelo.*;
+
+import jakarta.persistence.*;
+
+
+
+public class BancoApp {
+
+   public static void main(String[] args) {
+
+       EntityManagerFactory emf = Persistence.createEntityManagerFactory("bancoPU");
+
+       EntityManager em = emf.createEntityManager();
+
+
+
+       System.out.println("Sistema bancario iniciado correctamente.");
+
+
+
+       em.close();
+
+       emf.close();
+
+   }
+
+}
+

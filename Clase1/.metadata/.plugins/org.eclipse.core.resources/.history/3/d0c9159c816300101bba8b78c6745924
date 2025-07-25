@@ -1,0 +1,60 @@
+package com.ejemplo.banco.modelo;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import com.ejemplo.banco.Enum.TipoMovimiento;
+
+@Entity
+public class Movimiento {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private TipoMovimiento tipoMovimiento;
+
+    private BigDecimal monto;
+    private BigDecimal montoAnterior;
+    private BigDecimal montoNuevo;
+
+    private String descripcion;
+    private LocalDateTime fechaMovimiento;
+
+    @Column(name = "numero_transaccion", nullable = false)
+    private String numeroTransaccion;
+
+    @ManyToOne
+    @JoinColumn(name = "cuenta_id", nullable = false)
+    private Cuenta cuenta;
+
+    // Getters y setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public TipoMovimiento getTipoMovimiento() { return tipoMovimiento; }
+    public void setTipoMovimiento(TipoMovimiento tipoMovimiento) { this.tipoMovimiento = tipoMovimiento; }
+
+    public BigDecimal getMonto() { return monto; }
+    public void setMonto(BigDecimal monto) { this.monto = monto; }
+
+    public BigDecimal getMontoAnterior() { return montoAnterior; }
+    public void setMontoAnterior(BigDecimal montoAnterior) { this.montoAnterior = montoAnterior; }
+
+    public BigDecimal getMontoNuevo() { return montoNuevo; }
+    public void setMontoNuevo(BigDecimal montoNuevo) { this.montoNuevo = montoNuevo; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public LocalDateTime getFechaMovimiento() { return fechaMovimiento; }
+    public void setFechaMovimiento(LocalDateTime fechaMovimiento) { this.fechaMovimiento = fechaMovimiento; }
+
+    public String getNumeroTransaccion() { return numeroTransaccion; }
+    public void setNumeroTransaccion(String numeroTransaccion) { this.numeroTransaccion = numeroTransaccion; }
+
+    public Cuenta getCuenta() { return cuenta; }
+    public void setCuenta(Cuenta cuenta) { this.cuenta = cuenta; }
+}

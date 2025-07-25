@@ -1,0 +1,5 @@
+package com.ejemplo.banco;
+
+public enum TipoMovimiento {
+
+}

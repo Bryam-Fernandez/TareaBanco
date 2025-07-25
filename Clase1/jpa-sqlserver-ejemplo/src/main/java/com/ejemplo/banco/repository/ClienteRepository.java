@@ -1,0 +1,44 @@
+package com.ejemplo.banco.repository;
+
+import com.ejemplo.banco.modelo.Cliente;
+import com.ejemplo.banco.enums.TipoDocumento;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
+import java.util.List;
+
+public class ClienteRepository {
+
+    private EntityManager em;
+
+
+    public ClienteRepository(EntityManager em) {
+        this.em = em;
+    }
+    public Cliente findById(Long id) {
+        return em.find(Cliente.class, id);
+    }
+
+    public Cliente findByNumeroDocumento(String numeroDocumento) {
+        TypedQuery<Cliente> query = em.createQuery(
+            "SELECT c FROM Cliente c WHERE c.numeroDocumento = :numero", Cliente.class
+        );
+        query.setParameter("numero", numeroDocumento);
+        return query.getSingleResult();
+    }
+
+    public List<Cliente> findByTipoDocumento(TipoDocumento tipo) {
+        return em.createQuery(
+            "SELECT c FROM Cliente c WHERE c.tipoDocumento = :tipo", Cliente.class
+        ).setParameter("tipo", tipo).getResultList();
+    }
+
+    public void save(Cliente cliente) {
+        em.persist(cliente);
+    }
+
+    public void update(Cliente cliente) {
+        em.merge(cliente);
+    }
+}

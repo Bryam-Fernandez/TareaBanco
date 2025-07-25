@@ -1,0 +1,5 @@
+
+--Crear la base de datos y usarla--
+
+Create DATABASE Banco;
+USE Banco;

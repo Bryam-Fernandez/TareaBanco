@@ -1,0 +1,21 @@
+package com.ejemplo.banco.service;
+
+import com.ejemplo.banco.modelo.Cliente;
+import com.ejemplo.banco.repository.ClienteRepository;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
+public class ClienteService {
+
+    @Inject
+    private ClienteRepository clienteRepository;
+
+    @Transactional
+    public void registrarCliente(Cliente cliente) {
+        clienteRepository.save(cliente);
+    }
+
+    public Cliente buscarPorDocumento(String numeroDocumento) {
+        return clienteRepository.findByNumeroDocumento(numeroDocumento);
+    }
+}

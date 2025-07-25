@@ -1,0 +1,46 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.Enum.TipoCuenta;
+import com.ejemplo.banco.Enum.TipoMovimiento;
+import com.ejemplo.banco.modelo.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class BancoMain {
+    public static void main(String[] args) {
+        System.out.println("Iniciando sistema bancario...");
+
+        // Crear cliente
+        Cliente cliente = new Cliente();
+        cliente.setNombres("Bryam");
+        cliente.setApellidos("Fernández");
+        cliente.setNumeroDocumento("12345678");
+        cliente.setFechaNacimiento(LocalDate.of(2000, 5, 15));
+
+        // Crear cuenta
+        Cuenta cuenta = new Cuenta();
+        cuenta.setCliente(cliente);
+        cuenta.setNumeroCuenta("001-122334");
+        cuenta.setSaldoActual(new BigDecimal("500.00"));
+        cuenta.setTipoCuenta(TipoCuenta.AHORRO);
+
+        // Crear movimiento (depósito inicial)
+        Movimiento movimiento = new Movimiento();
+        movimiento.setCuenta(cuenta);
+        movimiento.setDescripcion("Depósito inicial");
+        movimiento.setFechaMovimiento(LocalDateTime.now());
+        movimiento.setMonto(new BigDecimal("500.00"));
+        movimiento.setTipoMovimiento(TipoMovimiento.DEPOSITO);
+        movimiento.setNumeroTransaccion(UUID.randomUUID().toString());
+        movimiento.setMontoAnterior(BigDecimal.ZERO);
+        movimiento.setMontoNuevo(new BigDecimal("500.00"));
+
+        // Mostrar los objetos creados
+        System.out.println("Cliente: " + cliente.getNombres() + " " + cliente.getApellidos());
+        System.out.println("Cuenta: " + cuenta.getNumeroCuenta() + " - Saldo: " + cuenta.getSaldoActual());
+        System.out.println("Movimiento: " + movimiento.getDescripcion() + " - Monto: " + movimiento.getMonto());
+    }
+}

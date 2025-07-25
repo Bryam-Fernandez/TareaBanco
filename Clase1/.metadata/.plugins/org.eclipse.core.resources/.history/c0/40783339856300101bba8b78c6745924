@@ -1,0 +1,5 @@
+package com.ejemplo.banco.service;
+
+public class MovimientoService {
+
+}

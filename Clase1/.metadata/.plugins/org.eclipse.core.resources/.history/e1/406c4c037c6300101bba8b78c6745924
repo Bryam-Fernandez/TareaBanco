@@ -1,0 +1,22 @@
+@Entity
+public class Cliente {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nombres;
+    private String apellidos;
+    private String numeroDocumento;
+    private String tipoDocumento;
+    private String telefono;
+    private String email;
+
+    private LocalDate fechaNacimiento;
+    private LocalDate fechaRegistro;
+
+    private String estado;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Cuenta> cuentas = new ArrayList<>();
+
+    // Getters, Setters, Constructor vacío
+}

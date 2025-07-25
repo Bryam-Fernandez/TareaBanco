@@ -1,0 +1,43 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.modelo.*;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class BancoMain {
+    public static void main(String[] args) {
+        System.out.println("Iniciando sistema bancario...");
+
+        // Crear un cliente
+        Cliente cliente = new Cliente();
+        cliente.setNombre("Bryam");
+        cliente.setApellido("Fernández");
+        cliente.setDni("12345678");
+        cliente.setFechaNacimiento(LocalDate.of(2000, 5, 15));
+
+        // Crear una cuenta
+        Cuenta cuenta = new Cuenta();
+        cuenta.setCliente(cliente);
+        cuenta.setNumeroCuenta("001-122334");
+        cuenta.setSaldo(BigDecimal.valueOf(500.00));
+        cuenta.setTipoCuenta(TipoCuenta.AHORRO);
+
+        // Crear un movimiento
+        Movimiento movimiento = new Movimiento();
+        movimiento.setCuenta(cuenta);
+        movimiento.setDescripcion("Depósito inicial");
+        movimiento.setFechaMovimiento(LocalDateTime.now());
+        movimiento.setMonto(BigDecimal.valueOf(500.00));
+        movimiento.setTipoMovimiento(TipoMovimiento.DEPOSITO);
+        movimiento.setNumeroTransaccion(UUID.randomUUID().toString());
+
+        // Mostrar por consola
+        System.out.println(cliente);
+        System.out.println(cuenta);
+        System.out.println(movimiento);
+    }
+}

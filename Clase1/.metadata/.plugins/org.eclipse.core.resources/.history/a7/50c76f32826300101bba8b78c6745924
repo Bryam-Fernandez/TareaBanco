@@ -1,0 +1,5 @@
+package com.ejemplo.banco.enums;
+
+public enum TipoCuenta {
+    AHORRO, CORRIENTE
+}

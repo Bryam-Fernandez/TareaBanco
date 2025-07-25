@@ -1,0 +1,111 @@
+package com.tuempresa.banco.entity;
+
+
+
+import jakarta.persistence.*;
+
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
+
+import java.time.LocalDateTime;
+
+import java.util.List;
+
+import com.ejemplo.banco.Enum.TipoCuenta;
+
+import jakarta.persistence.*;
+
+import jakarta.validation.constraints.*;
+
+import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
+
+import java.util.List;
+
+
+
+@Entity
+
+public class Cuenta {
+
+
+
+   @Id
+
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+   private Long id;
+
+
+
+   @Pattern(regexp = "\\d{4}-\\d{4}-\\d{4}")
+
+   @Column(unique = true, nullable = false)
+
+   private String numeroCuenta;
+
+
+
+   @Enumerated(EnumType.STRING)
+
+   private TipoCuenta tipoCuenta;
+
+
+
+   @DecimalMin("0.00")
+
+   private BigDecimal saldoActual;
+
+
+
+   private LocalDateTime fechaApertura;
+
+
+
+   private LocalDateTime fechaUltimoMovimiento;
+
+
+
+   @Enumerated(EnumType.STRING)
+
+   private EstadoCuenta estado;
+
+
+
+   @ManyToOne
+
+   @JoinColumn(name = "cliente_id")
+
+   private Cliente cliente;
+
+
+
+   @OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL, orphanRemoval = true)
+
+   private List<Movimiento> movimientos;
+
+
+
+   @PrePersist
+
+   public void prePersist() {
+
+       this.fechaApertura = LocalDateTime.now();
+
+       this.fechaUltimoMovimiento = this.fechaApertura;
+
+       if (this.estado == null) {
+
+           this.estado = EstadoCuenta.ACTIVA;
+
+       }
+
+   }
+
+
+
+   // Getters and setters
+
+}

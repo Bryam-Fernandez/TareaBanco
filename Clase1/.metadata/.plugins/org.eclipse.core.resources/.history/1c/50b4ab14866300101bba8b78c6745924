@@ -1,0 +1,78 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.enums.TipoCuenta;
+import com.ejemplo.banco.enums.TipoMovimiento;
+import com.ejemplo.banco.modelo.*;
+import com.ejemplo.banco.repository.*;
+import com.ejemplo.banco.service.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class BancoMain {
+    public static void main(String[] args) {
+        System.out.println("Iniciando sistema bancario...");
+
+        // Simulación de inyección manual (sin CDI real)
+        ClienteRepository clienteRepo = new ClienteRepository();
+        CuentaRepository cuentaRepo = new CuentaRepository();
+        MovimientoRepository movimientoRepo = new MovimientoRepository();
+
+        ClienteService clienteService = new ClienteService();
+        CuentaService cuentaService = new CuentaService();
+        MovimientoService movimientoService = new MovimientoService();
+
+        // Inyección manual de dependencias
+        inyectar(clienteService, clienteRepo);
+        inyectar(cuentaService, cuentaRepo);
+        inyectar(movimientoService, movimientoRepo);
+
+        // Crear cliente
+        Cliente cliente = new Cliente();
+        cliente.setNombres("Bryam");
+        cliente.setApellidos("Fernández");
+        cliente.setNumeroDocumento("12345678");
+        cliente.setFechaNacimiento(LocalDate.of(2000, 5, 15));
+
+        // Crear cuenta
+        Cuenta cuenta = new Cuenta();
+        cuenta.setCliente(cliente);
+        cuenta.setNumeroCuenta("001-122334");
+        cuenta.setSaldoActual(new BigDecimal("500.00"));
+        cuenta.setTipoCuenta(TipoCuenta.AHORRO);
+
+        // Crear movimiento (depósito)
+        Movimiento movimiento = new Movimiento();
+        movimiento.setCuenta(cuenta);
+        movimiento.setDescripcion("Depósito inicial");
+        movimiento.setFechaTransaccion(LocalDateTime.now());
+        movimiento.setMonto(new BigDecimal("500.00"));
+        movimiento.setTipoMovimiento(TipoMovimiento.DEPOSITO);
+        movimiento.setNumeroTransaccion(UUID.randomUUID().toString());
+        movimiento.setMontoAnterior(BigDecimal.ZERO);
+        movimiento.setMontoNuevo(cuenta.getSaldoActual());
+
+        // Guardar datos
+        clienteService.registrarCliente(cliente);
+        cuentaService.registrarCuenta(cuenta);
+        movimientoService.registrarMovimiento(movimiento);
+
+        // Mostrar resultados
+        System.out.println("Cliente registrado: " + cliente.getNombres() + " " + cliente.getApellidos());
+        System.out.println("Cuenta creada: " + cuenta.getNumeroCuenta() + " - Saldo: " + cuenta.getSaldoActual());
+        System.out.println("Movimiento registrado: " + movimiento.getDescripcion() + " - Monto: " + movimiento.getMonto());
+    }
+
+    // Método auxiliar para simular inyección manual
+    private static void inyectar(Object service, Object repo) {
+        try {
+            var field = service.getClass().getDeclaredFields()[0];
+            field.setAccessible(true);
+            field.set(service, repo);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al inyectar dependencias manualmente", e);
+        }
+    }
+}

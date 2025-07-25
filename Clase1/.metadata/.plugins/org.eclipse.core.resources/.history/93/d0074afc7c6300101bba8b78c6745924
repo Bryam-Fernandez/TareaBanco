@@ -1,0 +1,13 @@
+package com.ejemplo.banco.main;
+
+import com.ejemplo.banco.modelo.*;
+import com.ejemplo.banco.modelo.enums.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public class BancoMain {
+    public static void main(String[] args) {
+        // Aquí haces tus pruebas: crear cliente, cuenta, movimiento...
+        System.out.println("Sistema bancario iniciado...");
+    }
+}

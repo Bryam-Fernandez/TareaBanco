@@ -1,0 +1,61 @@
+package com.tuempresa.banco.repository;
+
+import com.tuempresa.banco.entity.Cliente;
+import com.tuempresa.banco.entity.enums.TipoDocumento;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+
+import java.util.List;
+
+/**
+ * Repositorio para la entidad Cliente.
+ * Permite realizar operaciones CRUD usando JPA (EntityManager).
+ */
+public class ClienteRepository {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    /**
+     * Buscar cliente por ID.
+     */
+    public Cliente findById(Long id) {
+        return em.find(Cliente.class, id);
+    }
+
+    /**
+     * Buscar cliente por número de documento.
+     */
+    public Cliente findByNumeroDocumento(String numeroDocumento) {
+        TypedQuery<Cliente> query = em.createQuery(
+            "SELECT c FROM Cliente c WHERE c.numeroDocumento = :numero", Cliente.class
+        );
+        query.setParameter("numero", numeroDocumento);
+        return query.getSingleResult();
+    }
+
+    /**
+     * Buscar clientes por tipo de documento.
+     */
+    public List<Cliente> findByTipoDocumento(TipoDocumento tipo) {
+        return em.createQuery(
+            "SELECT c FROM Cliente c WHERE c.tipoDocumento = :tipo", Cliente.class
+        ).setParameter("tipo", tipo).getResultList();
+    }
+
+    /**
+     * Guardar un nuevo cliente.
+     */
+    public void save(Cliente cliente) {
+        em.persist(cliente);
+    }
+
+    /**
+     * Actualizar un cliente existente.
+     */
+    public void update(Cliente cliente) {
+        em.merge(cliente);
+    }
+}
